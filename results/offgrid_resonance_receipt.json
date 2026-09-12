@@ -1,0 +1,34 @@
+{
+  "gate": "F8_offgrid_resonant_credit_attacker",
+  "seeds": 8,
+  "steps": 4000,
+  "candidate_frequencies": [0.0, 0.2617993877991494, 0.5235987755982988, 1.0471975511965976],
+  "hidden_frequencies": [0.1308996938995747, 0.39269908169872414, 0.7853981633974483],
+  "summary": {
+    "discrete": {
+      "mean_final_score": 0.29704247,
+      "mean_min_branch_score": 0.10296530,
+      "mean_curve_score": 0.15452177
+    },
+    "softmix": {
+      "mean_final_score": 0.22767683,
+      "mean_min_branch_score": 0.11062497,
+      "mean_curve_score": 0.11763587
+    },
+    "nearest": {
+      "mean_final_score": 0.34487747,
+      "mean_min_branch_score": 0.13772999,
+      "mean_curve_score": 0.18651852
+    },
+    "oracle": {
+      "mean_final_score": 0.61058260,
+      "mean_min_branch_score": 0.54254710,
+      "mean_curve_score": 0.35825772
+    }
+  },
+  "comparisons": {
+    "oracle_minus_discrete_mean": 0.31354013,
+    "oracle_minus_nearest_mean": 0.26570513,
+    "discrete_minus_softmix_mean": 0.06936564
+  }
+}
