@@ -1,0 +1,70 @@
+{
+  "gate": "F4_mixed_global_consequence_local_eligibility",
+  "seeds": 16,
+  "steps": 6000,
+  "summary": {
+    "local_oracle": {
+      "mean_final_score": 0.9931531217745453,
+      "std_final_score": 4.495931254324397e-05,
+      "mean_min_branch_score": 0.9926754764970911,
+      "reach_050_seeds": 16,
+      "mean_reach_050_cycle": 9.0,
+      "reach_075_seeds": 16,
+      "mean_reach_075_cycle": 19.4375
+    },
+    "immediate_global": {
+      "mean_final_score": 0.9001887343687551,
+      "std_final_score": 0.0018949954112778358,
+      "mean_min_branch_score": 0.8907682308315513,
+      "reach_050_seeds": 16,
+      "mean_reach_050_cycle": 98.4375,
+      "reach_075_seeds": 16,
+      "mean_reach_075_cycle": 218.3125
+    },
+    "eligibility": {
+      "mean_final_score": 0.8181059347344606,
+      "std_final_score": 0.00551349494572077,
+      "mean_min_branch_score": 0.7923894542993659,
+      "reach_050_seeds": 16,
+      "mean_reach_050_cycle": 169.0,
+      "reach_075_seeds": 16,
+      "mean_reach_075_cycle": 369.9375
+    },
+    "current_only": {
+      "mean_final_score": 0.6444983376277987,
+      "std_final_score": 0.005485484005423498,
+      "mean_min_branch_score": 0.6095248673122664,
+      "reach_050_seeds": 16,
+      "mean_reach_050_cycle": 326.4375,
+      "reach_075_seeds": 0,
+      "mean_reach_075_cycle": null
+    },
+    "shuffled_eligibility": {
+      "mean_final_score": 0.06667886779112595,
+      "std_final_score": 0.05125262869881736,
+      "mean_min_branch_score": -0.2189178665151611,
+      "reach_050_seeds": 0,
+      "mean_reach_050_cycle": null,
+      "reach_075_seeds": 0,
+      "mean_reach_075_cycle": null
+    },
+    "pooled_eligibility": {
+      "mean_final_score": 0.08556496124464873,
+      "std_final_score": 0.038068784699307856,
+      "mean_min_branch_score": -0.1630097403101565,
+      "reach_050_seeds": 0,
+      "mean_reach_050_cycle": null,
+      "reach_075_seeds": 0,
+      "mean_reach_075_cycle": null
+    }
+  },
+  "comparisons": {
+    "eligibility_beats_current_only_seeds": 16,
+    "eligibility_minus_current_only_mean": 0.1736075971066619,
+    "eligibility_beats_shuffled_eligibility_seeds": 16,
+    "eligibility_minus_shuffled_eligibility_mean": 0.7514270669433346,
+    "eligibility_beats_pooled_eligibility_seeds": 16,
+    "eligibility_minus_pooled_eligibility_mean": 0.7325409734898118
+  },
+  "note": "Compact receipt from the 16-seed full run. mixed_credit.py regenerates per-seed rows when run with the same arguments."
+}
