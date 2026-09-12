@@ -1,114 +1,89 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>GeometricNeuronV25 — separated credit</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GeometricNeuronV25 — separated causal learning</title>
 <style>
-:root{color-scheme:dark;--bg:#080b10;--panel:#111720;--line:#273445;--text:#eef6ff;--muted:#9eacbd;--cyan:#79e6ff;--green:#9dffb2;--gold:#ffd98a;--red:#ff9c9c}
-*{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at 30% -10%,#172334 0,#080b10 40%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
-main{max-width:1120px;margin:auto;padding:36px 18px 80px} h1{font-size:clamp(42px,7vw,82px);line-height:.94;letter-spacing:-.055em;margin:12px 0 18px;max-width:970px} h2{font-size:clamp(25px,3vw,40px);letter-spacing:-.035em;margin:0 0 10px} h3{margin:0 0 6px} p{color:var(--muted);line-height:1.65}.lead{font-size:20px;max-width:880px;color:#cbd8e8}.tag{display:inline-block;border:1px solid #33455e;border-radius:999px;padding:7px 11px;color:var(--cyan);font-size:12px;letter-spacing:.11em;text-transform:uppercase}.panel{background:linear-gradient(180deg,rgba(18,24,34,.96),rgba(11,15,22,.96));border:1px solid var(--line);border-radius:20px;padding:20px;margin:18px 0;box-shadow:0 18px 70px rgba(0,0,0,.24)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.card{border:1px solid var(--line);border-radius:16px;padding:15px;background:#0c1118}.card b{font-size:26px;display:block;margin:6px 0}.card small{color:var(--muted)}.eq{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#090d13;border:1px solid #263243;border-radius:15px;padding:16px;white-space:pre-wrap;overflow:auto;color:#dcecff}.result{display:grid;grid-template-columns:1.5fr repeat(3,1fr);gap:1px;background:#273445;border:1px solid #273445;border-radius:14px;overflow:hidden;margin-top:14px}.result div{background:#0c1118;padding:10px 12px}.result .head{color:#fff;font-weight:700}.good{color:var(--green)!important}.bad{color:var(--red)!important}.gold{color:var(--gold)!important}canvas{display:block;width:100%;height:360px;border-radius:14px;border:1px solid #223044;background:#080c12}.controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:13px}label{font-size:12px;color:var(--muted);display:flex;gap:8px;align-items:center}input[type=range]{width:150px}button{border:1px solid #354860;background:#172131;color:#f4f8ff;padding:9px 12px;border-radius:10px;cursor:pointer}.boundary{border-left:3px solid var(--gold);padding-left:16px;margin-top:28px}a{color:var(--cyan)}@media(max-width:850px){.grid,.cards{grid-template-columns:1fr}.result{grid-template-columns:1fr 1fr}}
+:root{color-scheme:dark;--bg:#080a0f;--panel:#111722;--line:#263248;--text:#eef5ff;--muted:#9aaac0;--cyan:#79e6ff;--green:#9cffb4;--amber:#ffd487;--red:#ff9f9f}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% -10%,#172336 0,#080a0f 38%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}main{max-width:1120px;margin:auto;padding:42px 18px 80px}h1{font-size:clamp(42px,7vw,82px);line-height:.95;letter-spacing:-.055em;margin:12px 0 20px;max-width:950px}h2{font-size:clamp(25px,3vw,38px);letter-spacing:-.035em;margin:0 0 12px}h3{margin:0 0 8px}.lead{font-size:20px;line-height:1.6;color:#cbd7e8;max-width:880px}.tag{display:inline-block;padding:7px 11px;border:1px solid #31435e;border-radius:999px;color:var(--cyan);font-size:12px;text-transform:uppercase;letter-spacing:.12em}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:28px 0}.card{background:linear-gradient(180deg,#121925,#0d121b);border:1px solid var(--line);border-radius:19px;padding:20px}.wide{grid-column:1/-1}.muted,p{color:var(--muted);line-height:1.65}.eq{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#090d14;border:1px solid #243148;border-radius:14px;padding:16px;white-space:pre-wrap;color:#dcecff}.pipeline{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin:30px 0}.pipeline div{border:1px solid #293750;border-radius:13px;padding:14px 8px;text-align:center;background:#101722;font-size:13px;display:flex;align-items:center;justify-content:center;min-height:78px}.arrow{color:var(--cyan)!important;font-size:22px;background:transparent!important;border:0!important}.bars{display:grid;grid-template-columns:80px 1fr 1fr;gap:9px 13px;align-items:center;margin-top:18px}.head{font-size:11px;color:#8191a9;text-transform:uppercase;letter-spacing:.08em}.barbox{height:28px;background:#0a0e15;border:1px solid #202b3d;border-radius:8px;overflow:hidden;position:relative}.bar{height:100%;min-width:2px;background:linear-gradient(90deg,#55b9d4,#8df2ff)}.bar.slow{background:linear-gradient(90deg,#64c77f,#a7ffbd)}.barlabel{position:absolute;right:7px;top:5px;font-size:12px;color:white}.switches{display:flex;gap:8px;margin:14px 0}.switches button{border:1px solid #34445c;background:#142033;color:white;border-radius:10px;padding:8px 12px;cursor:pointer}.switches button.active{border-color:var(--cyan);color:var(--cyan)}table{width:100%;border-collapse:collapse;margin-top:10px}td,th{padding:10px 9px;border-bottom:1px solid #202a3b;text-align:right}td:first-child,th:first-child{text-align:left}.good{color:var(--green);font-weight:700}.timeline{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.timeline .step{border:1px solid #28364b;border-radius:14px;padding:13px;background:#0e141e}.step b{color:var(--cyan);display:block;margin-bottom:5px}.boundary{border-left:3px solid var(--amber);padding-left:17px;margin-top:28px}.links a{color:var(--cyan);margin-right:15px}.tiny{font-size:12px;color:#7e8da2}@media(max-width:820px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}.pipeline,.timeline{grid-template-columns:1fr}.arrow{min-height:25px!important}.bars{grid-template-columns:62px 1fr 1fr}}
 </style>
 </head>
 <body><main>
-<span class="tag">V25 biological branch · F0–F5</span>
-<h1>Separation may be part of the learning rule.</h1>
-<p class="lead">The project started with genetic-algorithm fanning. The biological branch has now become more specific: semi-independent routes can preserve <em>who changed</em> and <em>for how long that change remains eligible</em>, even after downstream consequences have mixed into one global signal.</p>
+<span class="tag">GeometricNeuronV25 · F0–F6</span>
+<h1>Learning may require keeping causality separated.</h1>
+<p class="lead">The project began with genetic-algorithm fanning. It has become a more specific neuron-shaped question: can a branching system preserve <em>where</em> a cause happened, <em>what</em> local change remains eligible, and <em>how long</em> that cause should survive while downstream consequences mix?</p>
 
-<section class="panel">
-<h2>The current mechanism</h2>
-<div class="eq">local route perturbation
-        ↓
-local causal / eligibility state
-        ↓
-soma / AIS event and axonal fan-out
-        ↓
-recurrent downstream mixing
-        ↓
-one unlabeled scalar consequence
-        ×
-separate local eligibility traces
-        ↓
-route-specific plastic change</div>
-<p>This is a synthetic learning architecture, not a claim that a neuron literally runs a genetic algorithm. The question is whether the physical separations already present in neurons could solve otherwise difficult credit-assignment problems.</p>
+<div class="pipeline">
+<div>dendritic<br>branch event</div><div class="arrow">→</div><div>AIS / global<br>event</div><div class="arrow">→</div><div>mixed delayed<br>consequence</div><div class="arrow">×</div><div>local eligibility<br>at several timescales</div>
+</div>
+
+<div class="grid">
+<section class="card wide">
+<h2>F6: the branch changes its memory when the world changes</h2>
+<p>No branch receives the downstream decay or the switch time. Each branch carries four local eligibility traces and learns which trace best predicts the one observed global modulation.</p>
+<div class="switches"><button id="fast" class="active">fast world</button><button id="slow">slow world</button></div>
+<div class="bars">
+<div></div><div class="head">before hidden switch</div><div class="head">after hidden switch</div>
+<div>0.20</div><div class="barbox"><div class="bar" style="width:93.38%"></div><span class="barlabel">93.38%</span></div><div class="barbox"><div class="bar slow" style="width:8.94%"></div><span class="barlabel">8.94%</span></div>
+<div>0.70</div><div class="barbox"><div class="bar" style="width:4.73%"></div><span class="barlabel">4.73%</span></div><div class="barbox"><div class="bar slow" style="width:1.40%"></div><span class="barlabel">1.40%</span></div>
+<div>0.95</div><div class="barbox"><div class="bar" style="width:.76%"></div><span class="barlabel">0.76%</span></div><div class="barbox"><div class="bar slow" style="width:8.81%"></div><span class="barlabel">8.81%</span></div>
+<div>0.98</div><div class="barbox"><div class="bar" style="width:1.12%"></div><span class="barlabel">1.12%</span></div><div class="barbox"><div class="bar slow" style="width:80.84%"></div><span class="barlabel">80.84%</span></div>
+</div>
+<div class="eq" id="world">fast consequence world: downstream decay = 0.00
+selected local causal memory ≈ fast trace</div>
 </section>
 
-<div class="cards">
-<div class="card"><small>F2 · bounded observation</small><b class="good">0.99964</b><span>own route-history final score; unobserved routes stay protected.</span></div>
-<div class="card"><small>F3 · exact delayed tag</small><b class="good">0.99055</b><span>delayed credit nearly matches the immediate oracle when causal identity is preserved.</span></div>
-<div class="card"><small>F4 · unlabeled mixed reward</small><b class="gold">0.81811</b><span>local eligibility still learns after the explicit source label is removed.</span></div>
-<div class="card"><small>F5 · slow consequences</small><b class="gold">0.98</b><span>best tested eligibility decay when downstream mixing is very slow (0.90).</span></div>
-</div>
-
-<section class="panel">
-<h2>F4: remove the reward address</h2>
-<p>Three branches perturb simultaneously. Their effects become one scalar consequence and are mixed with earlier consequences. The reward itself contains no branch identity.</p>
-<div class="result">
-<div class="head">policy</div><div class="head">final</div><div class="head">worst branch</div><div class="head">0.75 reached</div>
-<div>local immediate oracle</div><div>0.99315</div><div>0.99268</div><div>16/16</div>
-<div>immediate global scalar</div><div>0.90019</div><div>0.89077</div><div>16/16</div>
-<div class="good">mixed scalar × local eligibility</div><div class="good">0.81811</div><div class="good">0.79239</div><div class="good">16/16</div>
-<div>current perturbation only</div><div>0.64450</div><div>0.60952</div><div>0/16</div>
-<div class="bad">shuffled eligibility</div><div class="bad">0.06668</div><div class="bad">-0.21892</div><div>0/16</div>
-<div class="bad">pooled eligibility</div><div class="bad">0.08556</div><div class="bad">-0.16301</div><div>0/16</div>
-</div>
-<p>The crucial attacker is pooling: the same temporal information exists, but its route identity is erased. Learning nearly disappears. In this toy, <strong>where the memory lives</strong> matters as much as having memory.</p>
+<section class="card">
+<h2>It also improves learning</h2>
+<table><tr><th>policy</th><th>final</th><th>curve area</th></tr>
+<tr><td>fixed 0.20</td><td>0.80984</td><td>0.65815</td></tr>
+<tr><td>fixed 0.70</td><td>0.83336</td><td>0.66398</td></tr>
+<tr><td>fixed 0.95</td><td>0.86595</td><td>0.65694</td></tr>
+<tr><td>fixed 0.98</td><td>0.85432</td><td>0.62218</td></tr>
+<tr><td class="good">adaptive local</td><td class="good">0.87925</td><td class="good">0.68435</td></tr></table>
+<p class="tiny">8 matched seeds. Adaptive beats every fixed-timescale arm in 8/8 seeds on final score.</p>
 </section>
 
-<section class="grid">
-<div class="panel">
-<h2>F5: memory must last long enough</h2>
-<p>Move the downstream-memory slider. The bars show the measured best fixed eligibility timescale from the F5 sweep. The useful local trace becomes slower as consequence mixing becomes slower.</p>
-<canvas id="trace" width="540" height="360"></canvas>
-<div class="controls"><label>downstream decay <input id="downstream" type="range" min="0" max="3" step="1" value="2"></label><b id="dLabel">0.70</b></div>
-</div>
-<div class="panel">
-<h2>Why this matters biologically</h2>
-<p>Aizenbud's dendritic picture gives semi-independent nonlinear subregions. Leterrier's AIS gives a sharp adaptive boundary and event generator. V25 adds a learning hypothesis: those separations can preserve local causal state after the global event has mixed information.</p>
-<div class="eq">dendritic compartment
-    ≠ merely one more feature
+<section class="card">
+<h2>The biological matrix</h2>
+<div class="eq">branch b owns:
+  route identity
+  Δ-history
+  e_fast
+  e_medium
+  e_slow
+  local confidence over causal lifetime
 
-possible additional role:
-    preserve local ancestry / eligibility
-    until delayed global consequence arrives</div>
-<p>The hypothesis becomes stronger only if later gates can choose and adapt those local timescales without an experimenter picking them.</p>
-</div>
+one global consequence
+× separated local causal state
+→ branch-specific plasticity</div>
+<p>The key architectural claim is not “neurons run GAs.” It is that physical compartmentalization can preserve causal address after global signals have mixed information.</p>
 </section>
+</div>
 
-<section class="panel">
-<h2>Next: the branch chooses its memory</h2>
-<p>F5 still selects the best eligibility decay after the fact. The next gate gives each branch several traces at once:</p>
-<div class="eq">e_fast    e_medium    e_slow
-   \          |          /
-    \         |         /
-     experience selects which causal memory to trust
-
-then change the downstream timescale mid-run</div>
-<p>If trace preference follows the environment rather than staying fixed, the old V24 fast/medium/slow idea becomes an actual adaptive credit mechanism.</p>
+<section class="card wide">
+<h2>What each gate removed</h2>
+<div class="timeline">
+<div class="step"><b>F2</b>Only one route observable. Separation prevents silent damage to unseen routes.</div>
+<div class="step"><b>F3</b>Credit arrives late. Persistent local identity bridges the delay.</div>
+<div class="step"><b>F4</b>Reward loses its source label. Local eligibility rescues mixed global credit.</div>
+<div class="step"><b>F5</b>One memory constant fails. Useful causal lifetime depends on consequence timescale.</div>
+<div class="step"><b>F6</b>The branch selects its own memory lifetime and changes it after a hidden regime switch.</div>
+</div>
 </section>
 
 <section class="boundary">
 <h2>Claim boundary</h2>
-<p>The numerical gates are synthetic. They do not establish a specific molecular implementation, nor that dendrites or axons literally perform GA selection. What has been earned is narrower: local separation, route-specific causal state, and timescale can materially change learning under bounded and delayed feedback.</p>
+<p>These are synthetic learning experiments, not evidence that a dendrite or AIS implements this exact code. The F6 predictor bank is engineered. What has been earned is narrower: separated local state can solve credit problems that pooled state cannot, and local timescale choice can adapt when the temporal structure of consequence changes.</p>
+<p>The next unresolved recursion is harder: can the available causal lifetimes themselves be grown and pruned instead of supplied in advance? A naive grow/prune attempt does not yet match F6, so that remains open rather than being tuned into a success.</p>
 </section>
 
-<p><a href="../README.md">README</a> · <a href="../MIXED_CREDIT_RESULTS.md">F4 results</a> · <a href="../TRACE_TIMESCALE_RESULTS.md">F5 results</a> · <a href="https://github.com/anttiluode/GeometricNeuronV25GeneticAlgoAndFanningNeuron">repository</a></p>
+<p class="links"><a href="../README.md">README</a><a href="../ADAPTIVE_TIMESCALE_RESULTS.md">F6 results</a><a href="https://github.com/anttiluode/GeometricNeuronV25GeneticAlgoAndFanningNeuron">GitHub</a></p>
 </main>
 <script>
-const data=[
- {d:.20,best:.85,bestScore:.83244,fixed:.82826},
- {d:.50,best:.95,bestScore:.81643,fixed:.78961},
- {d:.70,best:.95,bestScore:.80460,fixed:.72357},
- {d:.90,best:.98,bestScore:.75274,fixed:.47707}
-];
-const canvas=document.getElementById('trace'),ctx=canvas.getContext('2d'),slider=document.getElementById('downstream'),lab=document.getElementById('dLabel');
-function draw(){
- const r=data[+slider.value]; lab.textContent=r.d.toFixed(2); ctx.clearRect(0,0,canvas.width,canvas.height);
- ctx.fillStyle='#9eacbd';ctx.font='13px system-ui';ctx.fillText('downstream consequence memory',28,35);ctx.fillStyle='#eef6ff';ctx.font='bold 28px system-ui';ctx.fillText(r.d.toFixed(2),28,68);
- const traces=[{name:'fast / no trace',e:0.00},{name:'medium',e:0.70},{name:'slow',e:r.best}];
- traces.forEach((t,i)=>{const y=120+i*70;const w=420*t.e;ctx.fillStyle='#182433';ctx.fillRect(28,y,430,28);ctx.fillStyle=i===2?'#9dffb2':'#79e6ff';ctx.fillRect(28,y,w,28);ctx.fillStyle='#dcecff';ctx.font='13px system-ui';ctx.fillText(`${t.name}  eligibility decay ${t.e.toFixed(2)}`,28,y-9)});
- ctx.fillStyle='#ffd98a';ctx.font='14px system-ui';ctx.fillText(`best score ${r.bestScore.toFixed(3)}   vs fixed 0.70 → ${r.fixed.toFixed(3)}`,28,330);
-}
-slider.oninput=draw;draw();
+const fast=document.getElementById('fast'), slow=document.getElementById('slow'), world=document.getElementById('world');
+fast.onclick=()=>{fast.classList.add('active');slow.classList.remove('active');world.textContent='fast consequence world: downstream decay = 0.00\nselected local causal memory ≈ fast trace';};
+slow.onclick=()=>{slow.classList.add('active');fast.classList.remove('active');world.textContent='slow consequence world: downstream decay = 0.90\nselected local causal memory ≈ very slow trace';};
 </script>
 </body></html>
