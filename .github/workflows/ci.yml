@@ -17,3 +17,4 @@ jobs:
       - run: python -m unittest discover -s tests -v
       - run: python evolving_axon.py --seeds 2 --generations 35 --output smoke_results.json
       - run: python fan_geometry.py --seeds 2 --generations 25 --output fan_smoke_results.json
+      - run: python nested_fan.py --seeds 2 --cycles 8 --output nested_fan_smoke_results.json
