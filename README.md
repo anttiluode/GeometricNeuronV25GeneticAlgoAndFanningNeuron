@@ -1,165 +1,140 @@
 # GeometricNeuronV25 — Genetic Algorithms and the Fanning Neuron
 
-> **Working hypothesis:** useful learning may live in *separated route histories of successful change*, not only in one global weight vector or one global gradient.
+> **Working hypothesis:** useful learning may live in separated route histories and local causal state, not only in one global weight vector or one global gradient.
 
-V25 began from a simple genetic-algorithm picture:
-
-```text
-FAN OUT -> COMPETE -> RETAIN -> SHAPE THE NEXT FAN -> repeat
-```
-
-A neuron is not literally a genetic algorithm. But it is a branching, recurrent, plastic object with semi-independent dendritic routes, a sharp soma/AIS bottleneck, divergent axonal consequences, and local state that can outlive one event.
-
-The repo asks whether the same organizational motif becomes useful again at that higher computational scale.
-
-## 1. Keep the fan, not only the winner
-
-The first V25 draft collapsed each generation to one centroid and tried to forecast the next centroid with a DMD-like model. That richer predictor did not beat strong simple baselines. The negative result is preserved in [`RESULTS.md`](RESULTS.md) and [`evolving_axon.py`](evolving_axon.py).
-
-The restart keeps the population / route fan:
+V25 began from a genetic-algorithm picture:
 
 ```text
-P0 -> P1 -> P2 -> ...
+FAN OUT -> COMPETE -> RETAIN -> SHAPE NEXT FAN -> repeat
 ```
 
-and asks what useful structure survives across generations.
+A neuron is not literally a GA. The biological question is whether the same organizational motif becomes useful again because a neuron is a branching, recurrent, plastic object with semi-independent dendritic routes, an AIS bottleneck, divergent axonal consequences, and local state that can outlive one event.
 
-## 2. Gates F0–F1 — successful history forms a directional fan
+## F0–F1 — keep the fan, not only the winner
 
-[`fan_geometry.py`](fan_geometry.py) runs 24 parallel local evolutionary lineages. Each lineage fans eight fixed-norm mutations and keeps a local improvement. The true task branches are never supplied; the shared object is only the set of successful mutation directions.
+The first draft collapsed each generation to one centroid and tried to predict the next centroid. That failed against strong simple baselines and remains in [`RESULTS.md`](RESULTS.md).
 
-On an unguided isotropic trajectory, the historical multi-direction fan predicts the next successful directions with mean cosine `0.90114`, versus `0.82760` for a rotated/shuffled fan and `0.15014` for one centroid-momentum vector. History beats both controls in **32/32 seeds**.
+The restart keeps the whole route fan. [`fan_geometry.py`](fan_geometry.py) runs 24 parallel local evolutionary lineages and retains successful mutation directions.
 
-When used to orient future mutations under the same candidate count and mutation norm, the historical fan reaches `13.61372` mean final score versus `13.22529` isotropic, `13.25967` current covariance, `13.16867` rotated history, and `11.87747` centroid momentum. The gain over current covariance is only about **2.7%**: useful signal, not a new-general-optimizer claim.
+```text
+historical fan predicts next successful directions: 0.90114 cosine
+rotated/shuffled fan:                         0.82760
+single centroid momentum:                     0.15014
+```
 
-See [`FAN_RESULTS.md`](FAN_RESULTS.md) and [`results/fan_receipt.json`](results/fan_receipt.json).
+History beats both controls in **32/32 seeds**. When used to orient future mutations under matched budgets, the historical fan reaches `13.61372` versus `13.25967` for current covariance and `13.22529` isotropic. The advantage over current covariance is modest (~2.7%).
 
-## 3. Gate F2 — bounded observation reveals why separation matters
+See [`FAN_RESULTS.md`](FAN_RESULTS.md).
 
-[`nested_fan.py`](nested_fan.py) gives the system **12 separate branches**. Each branch has its own hidden useful direction, but on any generation only one branch/context is observable.
+## F2 — bounded observation makes separation useful
 
-A global update can therefore improve the visible route while silently damaging the other 11.
+[`nested_fan.py`](nested_fan.py) gives the system 12 separate branches. Only one branch is observable at a time, so global updates can silently damage unseen routes.
 
 | policy | mean final | worst branch | cycles to 0.99 |
 |---|---:|---:|---:|
-| flat global mutation | 0.85970 | 0.63203 | — |
+| flat global | 0.85970 | 0.63203 | — |
 | flat, active-step matched | 0.98148 | 0.95866 | — |
-| flat + replay | 0.95039 | 0.88974 | — |
 | local eligibility | 0.99644 | 0.99435 | 16.36 |
 | **local + own delta highway** | **0.99964** | **0.99940** | **10.99** |
 | local + wrong branch history | 0.99506 | 0.99147 | 20.23 |
 
-The own-history arm beat every attacker in **16/16 matched seeds**.
+Correct branch ancestry beats every attacker in **16/16 seeds**.
 
-F2 earns two separate statements:
-
-> **Compartment-specific eligibility protects routes that are not currently observable.**
-
-and
-
-> **A branch's own successful-delta ancestry is more useful for its next fan than another branch's ancestry.**
-
-See [`NESTED_FAN_RESULTS.md`](NESTED_FAN_RESULTS.md) and [`results/nested_fan_receipt.json`](results/nested_fan_receipt.json).
-
-## 4. Gate F3 — delayed consequence × explicit causal tag
-
-[`delayed_credit.py`](delayed_credit.py) removes immediate branch fitness. A branch proposes a fixed-norm delta; the hidden world returns only a noisy scalar consequence **4–20 events later** while other branches continue firing.
-
-F3 still stores an exact causal tag:
+F2 earns two ideas:
 
 ```text
-eligibility = (route identity, attempted delta, time)
+separation protects unobserved routes
+route-specific successful deltas can shape that route's next fan
 ```
 
-| policy | mean final | worst branch | cycles to 0.99 |
-|---|---:|---:|---:|
-| immediate oracle | 0.99058 | 0.98316 | 185.50* |
-| delayed + correct tag | 0.99055 | 0.98406 | 181.36* |
-| **delayed tag + own delta history** | **0.99188** | **0.98623** | **168.25** |
-| delayed + wrong tag | -0.86513 | -2.12278 | — |
-| delayed + current branch | -0.55092 | -1.66520 | — |
+See [`NESTED_FAN_RESULTS.md`](NESTED_FAN_RESULTS.md).
 
-Correct tagging is almost indistinguishable from immediate credit in mean final score. Destroying causal route identity destroys learning.
+## F3 — delayed consequence with explicit causal tag
 
-See [`DELAYED_CREDIT_RESULTS.md`](DELAYED_CREDIT_RESULTS.md) and [`results/delayed_credit_receipt.json`](results/delayed_credit_receipt.json).
+[`delayed_credit.py`](delayed_credit.py) removes immediate branch fitness. A noisy scalar consequence returns 4–20 events later while other branches continue firing.
 
-## 5. Gate F4 — one unlabeled global consequence × local traces
-
-F3's exact reward packet is too generous. [`mixed_credit.py`](mixed_credit.py) removes it.
-
-Three branches perturb simultaneously. Their effects are compressed into **one global scalar consequence**, and a recurrent downstream state mixes that scalar with consequences from earlier events. No reward carries a branch ID.
-
-Each branch may keep only its own decaying eligibility trace.
+F3 still stores the exact causal tag:
 
 ```text
-several local perturbations
-        ↓
-one global scalar consequence
-        ↓
-recurrent temporal mixing
-        ×
-separate local eligibility traces
-        ↓
-plastic change
+eligibility = (route, attempted delta, time)
 ```
 
-16 seeds × 6,000 events:
+Correct delayed tagging reaches `0.99055`, essentially the same as immediate credit (`0.99058`). Wrong-route credit collapses learning. Adding the route's own delta history reaches `0.99188` and reduces time to 0.99.
+
+See [`DELAYED_CREDIT_RESULTS.md`](DELAYED_CREDIT_RESULTS.md).
+
+## F4 — one unlabeled global consequence × local eligibility
+
+F3's reward packet is too generous. [`mixed_credit.py`](mixed_credit.py) removes the source label.
+
+Three branches perturb simultaneously. Their effects are compressed into **one scalar consequence** and recurrently mixed with earlier consequences. No reward carries a branch ID. Each branch may keep only its own decaying eligibility trace.
 
 | policy | mean final | worst branch | reaches 0.75 |
 |---|---:|---:|---:|
 | local immediate oracle | 0.99315 | 0.99268 | 16/16 |
 | immediate global scalar | 0.90019 | 0.89077 | 16/16 |
 | **mixed scalar × local eligibility** | **0.81811** | **0.79239** | **16/16** |
-| mixed scalar × current perturbation only | 0.64450 | 0.60952 | 0/16 |
-| mixed scalar × shuffled eligibility | 0.06668 | -0.21892 | 0/16 |
-| mixed scalar × pooled eligibility | 0.08556 | -0.16301 | 0/16 |
+| current perturbation only | 0.64450 | 0.60952 | 0/16 |
+| shuffled eligibility | 0.06668 | -0.21892 | 0/16 |
+| pooled eligibility | 0.08556 | -0.16301 | 0/16 |
 
-Local eligibility beats the current-only, shuffled, and pooled controls in **16/16 matched seeds**.
+Local eligibility beats current-only, shuffled, and pooled controls in **16/16 matched seeds**.
 
-This gate is deliberately less perfect than F3. Without an explicit source tag, some credit information is genuinely lost. But a large amount remains recoverable if the branch preserves its own temporal state.
+This is deliberately less perfect than F3. Without an explicit source tag, information is genuinely lost. But a large amount remains recoverable if branch identity and temporal state remain local.
 
-The earned statement is:
+See [`MIXED_CREDIT_RESULTS.md`](MIXED_CREDIT_RESULTS.md).
 
-> **A global consequence can remain useful without an explicit source label when local branches preserve their own temporally extended eligibility. Destroying either the temporal trace or the branch identity sharply reduces learning in this toy.**
+## F5 — eligibility itself has a timescale
 
-See [`MIXED_CREDIT_RESULTS.md`](MIXED_CREDIT_RESULTS.md) and [`results/mixed_credit_receipt.json`](results/mixed_credit_receipt.json).
+F4 fixed the local memory constant by hand. [`trace_timescales.py`](trace_timescales.py) sweeps eligibility decay against the timescale of downstream consequence mixing.
 
-## 6. Biological picture
+8 seeds × 4,000 events per cell:
 
-The modern neuron picture motivates this architecture without proving it:
+| downstream decay | best eligibility decay | best score | fixed 0.70 trace | gain |
+|---:|---:|---:|---:|---:|
+| 0.20 | 0.85 | 0.83244 | 0.82826 | +0.00418 |
+| 0.50 | 0.95 | 0.81643 | 0.78961 | +0.02681 |
+| 0.70 | 0.95 | 0.80460 | 0.72357 | +0.08103 |
+| 0.90 | 0.98 | 0.75274 | 0.47707 | +0.27566 |
+
+The best local trace slows monotonically as the downstream consequence becomes slower.
+
+The exact optimal values are model-specific. The robust point is simpler:
+
+> **Slow consequences require longer-lived local causal state. A fixed medium trace increasingly loses credit as temporal mixing becomes slower.**
+
+See [`TRACE_TIMESCALE_RESULTS.md`](TRACE_TIMESCALE_RESULTS.md).
+
+## Biological picture
 
 ```text
 dendritic fan
   semi-independent nonlinear compartments
         ↓
 soma / AIS
-  global event gate + somatodendritic/axonal boundary
+  global event gate + compartment boundary
         ↓
 axonal fan
-  one event -> many downstream consequences
+  many downstream consequences
         ↓
 delay / recurrence / modulation
         ↓
-local eligibility + persistent route state
+local eligibility at several timescales
         ↓
-changed future fan
+changed local route + changed next fan
 ```
 
-The important idea is **separation before recombination**.
+The central architectural idea is **separation before recombination**.
 
-A flat artificial neuron encourages all parameters to mix. A biological neuron repeatedly preserves distinctions: dendritic compartments remain partly independent, the AIS maintains a sharp compartment boundary and controls spike initiation, and the axon diverges again.
+A dendritic compartment may therefore be more than a nonlinear feature detector. In the V25 hypothesis it can also be a **credit-preserving compartment**: local causal state survives after global events have mixed information.
 
-V25 is now testing whether that separation has a learning function:
+This is compatible with the modern picture of dendritic compartmentalization and an adaptive AIS, but none of the synthetic gates proves that a specific dendritic, AIS, axonal, or neuromodulatory mechanism implements this exact algorithm.
 
-> **A dendritic compartment may be not only a nonlinear feature detector but also a credit-preserving compartment.**
+## Next gate — the branch must choose its own memory timescale
 
-That is the biological hypothesis earned by F2–F4. It is not yet a claim about a specific molecular pathway.
+F5 is only a map: the experimenter chooses the best trace after the run.
 
-## 7. Next gate — learn the eligibility timescale
-
-F4 fixes both downstream and eligibility decay by hand.
-
-The next biological question is whether a branch can discover which memory timescale is useful. Give each route several local traces:
+The next gate should give every branch a simultaneous bank of traces:
 
 ```text
 fast eligibility     e_f
@@ -167,33 +142,30 @@ medium eligibility   e_m
 slow eligibility     e_s
 ```
 
-and let only their predictive success determine which trace controls plasticity.
+and let experience determine which trace controls plasticity. Then change the downstream correlation time mid-run and ask whether the branch changes which memory it trusts.
 
-If the downstream consequence changes its correlation time, the winning trace should change with it.
-
-That would connect the old V24 fast/medium/slow idea to the new causal-route mechanism without importing the mathematics of GAx.
+That is where V25 would begin learning not only **what** change deserves credit, but **how long a cause should remain eligible**.
 
 ## Interactive page
 
 [Fan → Select → Retain → Fan](docs/index.html)
-
-The page is a hypothesis visualizer, not biological evidence.
 
 ## Run
 
 ```bash
 python -m pip install -r requirements.txt
 python -m unittest discover -s tests -v
-python fan_geometry.py --seeds 32 --generations 60 --output results/fan_receipt_full.json
-python nested_fan.py --seeds 16 --cycles 40 --output results/nested_fan_receipt_full.json
-python delayed_credit.py --seeds 16 --steps 2400 --output results/delayed_credit_receipt_full.json
-python mixed_credit.py --seeds 16 --steps 6000 --output results/mixed_credit_receipt_full.json
+python fan_geometry.py --seeds 32 --generations 60
+python nested_fan.py --seeds 16 --cycles 40
+python delayed_credit.py --seeds 16 --steps 2400
+python mixed_credit.py --seeds 16 --steps 6000
+python trace_timescales.py --seeds 8 --steps 4000
 ```
 
 ## Claim boundary
 
 V25 does **not** claim that neurons literally run genetic algorithms, that the AIS is a fitness function, or that these toys are superior general-purpose optimizers.
 
-The current earned statement is:
+The earned result so far is narrower:
 
-> **Separated local routes can protect unobserved knowledge, retain route-specific successful-change history, bridge delayed consequences with local causal state, and extract useful learning from a temporally mixed unlabeled global consequence when branch identity remains local.**
+> **Separated local routes can protect unobserved knowledge, retain route-specific successful-change history, bridge delayed consequences with local causal state, and extract useful learning from a temporally mixed unlabeled global consequence. The useful lifetime of that causal state depends strongly on the consequence timescale.**
