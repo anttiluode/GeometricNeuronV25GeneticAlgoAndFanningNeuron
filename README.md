@@ -99,11 +99,55 @@ F4 fixed the local memory constant by hand. [`trace_timescales.py`](trace_timesc
 
 The best local trace slows monotonically as the downstream consequence becomes slower.
 
-The exact optimal values are model-specific. The robust point is simpler:
-
 > **Slow consequences require longer-lived local causal state. A fixed medium trace increasingly loses credit as temporal mixing becomes slower.**
 
 See [`TRACE_TIMESCALE_RESULTS.md`](TRACE_TIMESCALE_RESULTS.md).
+
+## F6 — each branch learns how long to remember
+
+F5 was only a map: the experimenter chose the best trace after the run. [`adaptive_timescale.py`](adaptive_timescale.py) gives every branch all four traces simultaneously and lets experience decide which one controls plasticity.
+
+Each branch maintains a tiny predictor for each local trace. The predictor sees only that trace and the observed **global scalar modulation**. The branch trusts the trace with the lowest recent prediction error.
+
+The world switches halfway through the run without announcing it:
+
+```text
+first half:   downstream decay = 0.00
+second half:  downstream decay = 0.90
+```
+
+Mean trace use across 8 seeds:
+
+| trace decay | before switch | after switch |
+|---:|---:|---:|
+| 0.20 | **0.93380** | 0.08941 |
+| 0.70 | 0.04733 | 0.01400 |
+| 0.95 | 0.00763 | 0.08815 |
+| 0.98 | 0.01125 | **0.80844** |
+
+The same architecture therefore moves from fast causal memory to slow causal memory without receiving the regime label or switch time.
+
+It also improves learning:
+
+| policy | score at switch | final score | curve area |
+|---|---:|---:|---:|
+| fixed 0.20 | 0.78463 | 0.80984 | 0.65815 |
+| fixed 0.70 | 0.78418 | 0.83336 | 0.66398 |
+| fixed 0.95 | 0.75893 | 0.86595 | 0.65694 |
+| fixed 0.98 | 0.70940 | 0.85432 | 0.62218 |
+| **adaptive local selector** | **0.78810** | **0.87925** | **0.68435** |
+
+The adaptive arm beats every fixed-timescale control in **8/8 matched seeds** on final score.
+
+So V25 now separates three pieces of causal learning:
+
+```text
+WHERE did the cause occur?        -> branch identity
+WHAT change remains creditable?   -> local eligibility state
+HOW LONG should it remain alive?  -> locally selected timescale
+```
+
+See [`ADAPTIVE_TIMESCALE_RESULTS.md`](ADAPTIVE_TIMESCALE_RESULTS.md).
 
 ## Biological picture
 
@@ -121,6 +165,8 @@ delay / recurrence / modulation
         ↓
 local eligibility at several timescales
         ↓
+local evidence selects useful causal lifetime
+        ↓
 changed local route + changed next fan
 ```
 
@@ -128,23 +174,31 @@ The central architectural idea is **separation before recombination**.
 
 A dendritic compartment may therefore be more than a nonlinear feature detector. In the V25 hypothesis it can also be a **credit-preserving compartment**: local causal state survives after global events have mixed information.
 
+F6 makes the old fast/medium/slow idea operational rather than decorative. The timescales now have a job in temporal credit assignment, and a small meta-state decides which lifetime currently deserves influence.
+
 This is compatible with the modern picture of dendritic compartmentalization and an adaptive AIS, but none of the synthetic gates proves that a specific dendritic, AIS, axonal, or neuromodulatory mechanism implements this exact algorithm.
 
-## Next gate — the branch must choose its own memory timescale
+## Next gate — fan over the memories themselves
 
-F5 is only a map: the experimenter chooses the best trace after the run.
+F6 still receives a hand-designed bank of four lifetimes.
 
-The next gate should give every branch a simultaneous bank of traces:
+The next recursion is natural:
 
 ```text
-fast eligibility     e_f
-medium eligibility   e_m
-slow eligibility     e_s
+start with a few causal lifetimes
+        ↓
+persistent prediction mismatch
+        ↓
+FAN OUT new candidate lifetimes
+        ↓
+COMPETE on experienced consequence
+        ↓
+RETAIN useful lifetime / prune redundant lifetime
+        ↓
+repeat
 ```
 
-and let experience determine which trace controls plasticity. Then change the downstream correlation time mid-run and ask whether the branch changes which memory it trusts.
-
-That is where V25 would begin learning not only **what** change deserves credit, but **how long a cause should remain eligible**.
+That would bring the original V25 generate–compete–retain motif back **inside the learning rule itself**. The neuron-shaped system would not only select a memory timescale; it would restructure the set of timescales available to it.
 
 ## Interactive page
 
@@ -160,12 +214,13 @@ python nested_fan.py --seeds 16 --cycles 40
 python delayed_credit.py --seeds 16 --steps 2400
 python mixed_credit.py --seeds 16 --steps 6000
 python trace_timescales.py --seeds 8 --steps 4000
+python adaptive_timescale.py --seeds 8 --steps 6000
 ```
 
 ## Claim boundary
 
-V25 does **not** claim that neurons literally run genetic algorithms, that the AIS is a fitness function, or that these toys are superior general-purpose optimizers.
+V25 does **not** claim that neurons literally run genetic algorithms, that the AIS is a fitness function, that biological cells run normalized LMS, or that these toys are superior general-purpose optimizers.
 
 The earned result so far is narrower:
 
-> **Separated local routes can protect unobserved knowledge, retain route-specific successful-change history, bridge delayed consequences with local causal state, and extract useful learning from a temporally mixed unlabeled global consequence. The useful lifetime of that causal state depends strongly on the consequence timescale.**
+> **Separated local routes can protect unobserved knowledge, preserve route-specific successful-change history, bridge mixed delayed consequences with local causal state, and adapt the lifetime of that causal state when the consequence dynamics change.**
