@@ -1,0 +1,19 @@
+{
+  "seeds": 32,
+  "generations": 60,
+  "gate_f0_summary": {
+    "history_fan_alignment": 0.9011416483129338,
+    "shuffled_history_alignment": 0.8275989366787825,
+    "centroid_momentum_alignment": 0.15013586332338902,
+    "history_beats_shuffled_seeds": 32,
+    "history_beats_momentum_seeds": 32
+  },
+  "gate_f1_summary": {
+    "isotropic": {"mean_final_score": 13.225290814004593, "mean_branch_coverage": 3.0, "mean_min_branch_count": 5.40625},
+    "momentum": {"mean_final_score": 11.877469244749982, "mean_branch_coverage": 3.0, "mean_min_branch_count": 5.375},
+    "current_covariance": {"mean_final_score": 13.259667811461613, "mean_branch_coverage": 3.0, "mean_min_branch_count": 5.40625},
+    "history_fan": {"mean_final_score": 13.613717314091272, "mean_branch_coverage": 3.0, "mean_min_branch_count": 5.40625, "ratio_to_isotropic": 1.0294046584441552, "ratio_to_current_covariance": 1.0267583094206953, "ratio_to_shuffled_history": 1.033808526881538, "beats_isotropic_seeds": 32, "beats_current_covariance_seeds": 32, "beats_shuffled_history_seeds": 32},
+    "shuffled_history": {"mean_final_score": 13.168666091329289, "mean_branch_coverage": 3.0, "mean_min_branch_count": 5.40625}
+  },
+  "note": "Full per-seed curves are reproducible with: python fan_geometry.py --seeds 32 --generations 60 --output results/fan_receipt_full.json"
+}
