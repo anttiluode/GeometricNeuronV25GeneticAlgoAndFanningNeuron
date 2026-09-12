@@ -1,0 +1,57 @@
+{
+  "gate": "F7_frequency_addressed_causal_eligibility",
+  "seeds": 8,
+  "steps": 5000,
+  "frequencies": [0.0, 0.2617993877991494, 0.5235987755982988, 1.0471975511965976],
+  "summary": {
+    "adaptive": {
+      "mean_final_score": 0.6549035753654062,
+      "mean_min_branch_score": 0.5143711108107577,
+      "mean_curve_score": 0.3782108943122236,
+      "mean_frequency_id_accuracy": 1.0
+    },
+    "oracle": {
+      "mean_final_score": 0.7190628155242522,
+      "mean_min_branch_score": 0.6502045031281841,
+      "mean_curve_score": 0.44946317336984676,
+      "mean_frequency_id_accuracy": 1.0
+    },
+    "fixed0": {
+      "mean_final_score": 0.3180126023958779,
+      "mean_min_branch_score": -0.15168989246075784,
+      "mean_curve_score": 0.18938699905351405,
+      "mean_frequency_id_accuracy": 0.25
+    },
+    "fixed1": {
+      "mean_final_score": 0.34119625465165526,
+      "mean_min_branch_score": 0.08167264152967144,
+      "mean_curve_score": 0.18562451504255956,
+      "mean_frequency_id_accuracy": 0.25
+    },
+    "fixed2": {
+      "mean_final_score": 0.29199776821017587,
+      "mean_min_branch_score": 0.005802698043736726,
+      "mean_curve_score": 0.16514855036139459,
+      "mean_frequency_id_accuracy": 0.25
+    },
+    "fixed3": {
+      "mean_final_score": 0.2599221366578334,
+      "mean_min_branch_score": 0.022050978843890543,
+      "mean_curve_score": 0.1478981380081607,
+      "mean_frequency_id_accuracy": 0.25
+    },
+    "shuffled": {
+      "mean_final_score": 0.3900941240103908,
+      "mean_min_branch_score": 0.2333928019408388,
+      "mean_curve_score": 0.20160129804279775,
+      "mean_frequency_id_accuracy": 0.28125
+    }
+  },
+  "adaptive_beats_seeds": {
+    "fixed0": 8,
+    "fixed1": 8,
+    "fixed2": 8,
+    "fixed3": 8,
+    "shuffled": 8
+  }
+}
