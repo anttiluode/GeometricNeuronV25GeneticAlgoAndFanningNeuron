@@ -1,0 +1,39 @@
+{
+  "gate": "F5_eligibility_timescale_map",
+  "seeds": 8,
+  "steps": 4000,
+  "downstream_decays": [0.2, 0.5, 0.7, 0.9],
+  "eligibility_decays": [0.0, 0.2, 0.5, 0.7, 0.85, 0.95, 0.98],
+  "best_by_downstream": [
+    {
+      "downstream_decay": 0.2,
+      "best_eligibility_decay": 0.85,
+      "best_mean_final_score": 0.8324405915785834,
+      "fixed_070_score": 0.8282620455425864,
+      "best_minus_fixed_070": 0.004178546035996988
+    },
+    {
+      "downstream_decay": 0.5,
+      "best_eligibility_decay": 0.95,
+      "best_mean_final_score": 0.8164264745415766,
+      "fixed_070_score": 0.7896137166372226,
+      "best_minus_fixed_070": 0.026812757904354
+    },
+    {
+      "downstream_decay": 0.7,
+      "best_eligibility_decay": 0.95,
+      "best_mean_final_score": 0.8046010613037189,
+      "fixed_070_score": 0.7235705705918019,
+      "best_minus_fixed_070": 0.08103049071191704
+    },
+    {
+      "downstream_decay": 0.9,
+      "best_eligibility_decay": 0.98,
+      "best_mean_final_score": 0.7527361382431541,
+      "fixed_070_score": 0.47707334605289353,
+      "best_minus_fixed_070": 0.2756627921902606
+    }
+  ],
+  "best_trace_slows_monotonically": true,
+  "note": "Compact receipt. trace_timescales.py regenerates the full 4x7 sweep and per-cell statistics."
+}
