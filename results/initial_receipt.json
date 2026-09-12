@@ -1,0 +1,38 @@
+{
+  "gate0_12seeds_100gen": {
+    "trajectory_over_persistence_mean": 1.3919725763440216,
+    "trajectory_over_velocity_mean": 0.9741097668383906,
+    "trajectory_better_than_persistence_seeds": 0,
+    "trajectory_better_than_velocity_seeds": 11,
+    "velocity_direction_cosine_mean": 0.06312127274306403,
+    "trajectory_direction_cosine_mean": 0.015109939334645833
+  },
+  "gate1_12seeds_100gen": {
+    "velocity_over_baseline_final_mse_mean": 0.8061127586492437,
+    "trajectory_over_baseline_final_mse_mean": 0.842026888152009,
+    "trajectory_over_velocity_final_mse_mean": 1.05017762522427,
+    "velocity_better_final_seeds": 12,
+    "trajectory_better_final_seeds": 11,
+    "trajectory_beats_velocity_seeds": 5
+  },
+  "gate2_12seeds_100gen": {
+    "0.0": {"mean_ratio": 0.8061127586492437, "better_seeds": 12},
+    "0.5": {"mean_ratio": 0.8915210131201867, "better_seeds": 10},
+    "0.8": {"mean_ratio": 0.9444048145319943, "better_seeds": 9},
+    "0.95": {"mean_ratio": 1.0930155249874878, "better_seeds": 2}
+  },
+  "gate3_exploratory_6seeds_60gen": {
+    "0.25": {
+      "0.0": {"mean_ratio": 0.872328928281228, "better_seeds": 6},
+      "0.5": {"mean_ratio": 0.8989104447054709, "better_seeds": 5},
+      "0.8": {"mean_ratio": 1.0697433702891361, "better_seeds": 1},
+      "0.95": {"mean_ratio": 1.0646422288768034, "better_seeds": 2}
+    },
+    "0.125": {
+      "0.0": {"mean_ratio": 0.8376930053687633, "better_seeds": 6},
+      "0.5": {"mean_ratio": 0.8645809691723269, "better_seeds": 6},
+      "0.8": {"mean_ratio": 1.0028019695528132, "better_seeds": 4},
+      "0.95": {"mean_ratio": 1.0683910280553934, "better_seeds": 0}
+    }
+  }
+}
