@@ -1,0 +1,38 @@
+{
+  "gate": "F9_adaptive_continuous_resonator_fan",
+  "seeds": 8,
+  "steps": 6000,
+  "hidden_frequencies": [0.1308996938995747, 0.39269908169872414, 0.7853981633974483],
+  "summary": {
+    "adaptive": {
+      "mean_final_score": 0.57950258,
+      "mean_min_branch_score": 0.28582691,
+      "mean_curve_score": 0.29425838,
+      "mean_initial_frequency_mae": 0.26179939,
+      "mean_final_frequency_mae": 0.07657088
+    },
+    "discrete": {
+      "mean_final_score": 0.41883211,
+      "mean_min_branch_score": 0.18243336,
+      "mean_curve_score": 0.22357020
+    },
+    "nearest": {
+      "mean_final_score": 0.46205656,
+      "mean_min_branch_score": 0.20583422,
+      "mean_curve_score": 0.25979705
+    },
+    "oracle": {
+      "mean_final_score": 0.73560982,
+      "mean_min_branch_score": 0.68631661,
+      "mean_curve_score": 0.46520397
+    }
+  },
+  "comparisons": {
+    "adaptive_beats_discrete_seeds": 8,
+    "adaptive_minus_discrete_mean": 0.16067047,
+    "adaptive_beats_nearest_seeds": 8,
+    "adaptive_minus_nearest_mean": 0.11744602,
+    "adaptive_beats_oracle_seeds": 0,
+    "adaptive_minus_oracle_mean": -0.15610725
+  }
+}
