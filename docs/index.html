@@ -3,87 +3,122 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GeometricNeuronV25 — separated causal learning</title>
+<title>GeometricNeuronV25 — causal routes can move their temporal mode</title>
 <style>
-:root{color-scheme:dark;--bg:#080a0f;--panel:#111722;--line:#263248;--text:#eef5ff;--muted:#9aaac0;--cyan:#79e6ff;--green:#9cffb4;--amber:#ffd487;--red:#ff9f9f}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% -10%,#172336 0,#080a0f 38%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}main{max-width:1120px;margin:auto;padding:42px 18px 80px}h1{font-size:clamp(42px,7vw,82px);line-height:.95;letter-spacing:-.055em;margin:12px 0 20px;max-width:950px}h2{font-size:clamp(25px,3vw,38px);letter-spacing:-.035em;margin:0 0 12px}h3{margin:0 0 8px}.lead{font-size:20px;line-height:1.6;color:#cbd7e8;max-width:880px}.tag{display:inline-block;padding:7px 11px;border:1px solid #31435e;border-radius:999px;color:var(--cyan);font-size:12px;text-transform:uppercase;letter-spacing:.12em}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:28px 0}.card{background:linear-gradient(180deg,#121925,#0d121b);border:1px solid var(--line);border-radius:19px;padding:20px}.wide{grid-column:1/-1}.muted,p{color:var(--muted);line-height:1.65}.eq{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#090d14;border:1px solid #243148;border-radius:14px;padding:16px;white-space:pre-wrap;color:#dcecff}.pipeline{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin:30px 0}.pipeline div{border:1px solid #293750;border-radius:13px;padding:14px 8px;text-align:center;background:#101722;font-size:13px;display:flex;align-items:center;justify-content:center;min-height:78px}.arrow{color:var(--cyan)!important;font-size:22px;background:transparent!important;border:0!important}.bars{display:grid;grid-template-columns:80px 1fr 1fr;gap:9px 13px;align-items:center;margin-top:18px}.head{font-size:11px;color:#8191a9;text-transform:uppercase;letter-spacing:.08em}.barbox{height:28px;background:#0a0e15;border:1px solid #202b3d;border-radius:8px;overflow:hidden;position:relative}.bar{height:100%;min-width:2px;background:linear-gradient(90deg,#55b9d4,#8df2ff)}.bar.slow{background:linear-gradient(90deg,#64c77f,#a7ffbd)}.barlabel{position:absolute;right:7px;top:5px;font-size:12px;color:white}.switches{display:flex;gap:8px;margin:14px 0}.switches button{border:1px solid #34445c;background:#142033;color:white;border-radius:10px;padding:8px 12px;cursor:pointer}.switches button.active{border-color:var(--cyan);color:var(--cyan)}table{width:100%;border-collapse:collapse;margin-top:10px}td,th{padding:10px 9px;border-bottom:1px solid #202a3b;text-align:right}td:first-child,th:first-child{text-align:left}.good{color:var(--green);font-weight:700}.timeline{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.timeline .step{border:1px solid #28364b;border-radius:14px;padding:13px;background:#0e141e}.step b{color:var(--cyan);display:block;margin-bottom:5px}.boundary{border-left:3px solid var(--amber);padding-left:17px;margin-top:28px}.links a{color:var(--cyan);margin-right:15px}.tiny{font-size:12px;color:#7e8da2}@media(max-width:820px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}.pipeline,.timeline{grid-template-columns:1fr}.arrow{min-height:25px!important}.bars{grid-template-columns:62px 1fr 1fr}}
+:root{color-scheme:dark;--bg:#070a10;--panel:#101722;--line:#26344a;--text:#eef6ff;--muted:#9caec5;--cyan:#79e6ff;--green:#9cffb4;--amber:#ffd487;--red:#ff9d9d}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 18% -8%,#18273d 0,#070a10 42%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}main{max-width:1160px;margin:auto;padding:42px 18px 80px}h1{font-size:clamp(42px,7vw,82px);line-height:.96;letter-spacing:-.055em;margin:12px 0 20px;max-width:1000px}h2{font-size:clamp(25px,3vw,38px);letter-spacing:-.035em;margin:0 0 12px}p{color:var(--muted);line-height:1.65}.lead{font-size:20px;color:#cedbec;max-width:900px}.tag{display:inline-block;border:1px solid #344762;border-radius:999px;padding:7px 11px;color:var(--cyan);font-size:12px;text-transform:uppercase;letter-spacing:.12em}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:26px 0}.card{background:linear-gradient(180deg,#121a26,#0c121b);border:1px solid var(--line);border-radius:19px;padding:20px}.wide{grid-column:1/-1}.eq{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#090e16;border:1px solid #243149;border-radius:14px;padding:16px;white-space:pre-wrap;color:#dcecff}.pipeline{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin:30px 0}.pipeline div{border:1px solid #2a3850;border-radius:13px;padding:13px 8px;text-align:center;background:#101722;min-height:78px;display:flex;align-items:center;justify-content:center;font-size:13px}.arrow{border:0!important;background:transparent!important;color:var(--cyan);font-size:22px!important}table{width:100%;border-collapse:collapse;margin-top:10px}td,th{padding:10px 8px;border-bottom:1px solid #202b3d;text-align:right}td:first-child,th:first-child{text-align:left}.good{color:var(--green);font-weight:700}.bad{color:var(--red)}.amber{color:var(--amber)}canvas{width:100%;height:280px;border:1px solid #223047;background:#080c13;border-radius:15px;display:block}.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin:10px 0}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.step{border:1px solid #283750;background:#0d141e;border-radius:14px;padding:14px}.step b{display:block;color:var(--cyan);margin-bottom:6px}.boundary{border-left:3px solid var(--amber);padding-left:17px;margin-top:28px}.links a{color:var(--cyan);margin-right:15px}.tiny{font-size:12px;color:#7e8da2}@media(max-width:820px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}.pipeline,.steps{grid-template-columns:1fr}.arrow{min-height:20px!important}}
 </style>
 </head>
 <body><main>
-<span class="tag">GeometricNeuronV25 · F0–F6</span>
-<h1>Learning may require keeping causality separated.</h1>
-<p class="lead">The project began with genetic-algorithm fanning. It has become a more specific neuron-shaped question: can a branching system preserve <em>where</em> a cause happened, <em>what</em> local change remains eligible, and <em>how long</em> that cause should survive while downstream consequences mix?</p>
+<span class="tag">GeometricNeuronV25 · F0–F9</span>
+<h1>The causal route now moves its own temporal mode.</h1>
+<p class="lead">V25 started with fanning genetic-algorithm populations. It has become a separated-credit experiment: local branches preserve causal identity while consequences mix globally. The newest gates ask whether the <em>temporal dynamics that hold that causal address</em> can themselves be selected and rewritten.</p>
 
 <div class="pipeline">
-<div>dendritic<br>branch event</div><div class="arrow">→</div><div>AIS / global<br>event</div><div class="arrow">→</div><div>mixed delayed<br>consequence</div><div class="arrow">×</div><div>local eligibility<br>at several timescales</div>
+<div>dendritic<br>route</div><div class="arrow">→</div><div>global / AIS<br>event</div><div class="arrow">→</div><div>mixed future<br>consequence</div><div class="arrow">×</div><div>local route ×<br>temporal mode</div>
 </div>
 
 <div class="grid">
 <section class="card wide">
-<h2>F6: the branch changes its memory when the world changes</h2>
-<p>No branch receives the downstream decay or the switch time. Each branch carries four local eligibility traces and learns which trace best predicts the one observed global modulation.</p>
-<div class="switches"><button id="fast" class="active">fast world</button><button id="slow">slow world</button></div>
-<div class="bars">
-<div></div><div class="head">before hidden switch</div><div class="head">after hidden switch</div>
-<div>0.20</div><div class="barbox"><div class="bar" style="width:93.38%"></div><span class="barlabel">93.38%</span></div><div class="barbox"><div class="bar slow" style="width:8.94%"></div><span class="barlabel">8.94%</span></div>
-<div>0.70</div><div class="barbox"><div class="bar" style="width:4.73%"></div><span class="barlabel">4.73%</span></div><div class="barbox"><div class="bar slow" style="width:1.40%"></div><span class="barlabel">1.40%</span></div>
-<div>0.95</div><div class="barbox"><div class="bar" style="width:.76%"></div><span class="barlabel">0.76%</span></div><div class="barbox"><div class="bar slow" style="width:8.81%"></div><span class="barlabel">8.81%</span></div>
-<div>0.98</div><div class="barbox"><div class="bar" style="width:1.12%"></div><span class="barlabel">1.12%</span></div><div class="barbox"><div class="bar slow" style="width:80.84%"></div><span class="barlabel">80.84%</span></div>
+<h2>F7 → F8 → F9: select a mode, break it, then move it</h2>
+<div class="steps">
+<div class="step"><b>F7 · on-grid</b>The hidden branch frequency is present in a fixed resonant bank. Local prediction error identifies the right channel. Mean final score <strong>0.655</strong>.</div>
+<div class="step"><b>F8 · off-grid attacker</b>True frequencies move between the supplied channels. Discrete selection falls to <strong class="bad">0.297</strong>; even the privileged nearest channel reaches only <strong>0.345</strong>.</div>
+<div class="step"><b>F9 · moving pole</b>Each branch repeatedly fans nearby frequencies, retains the lowest-error pole and shrinks the radius. Mean final score recovers to <strong class="good">0.580</strong>.</div>
 </div>
-<div class="eq" id="world">fast consequence world: downstream decay = 0.00
-selected local causal memory ≈ fast trace</div>
 </section>
 
 <section class="card">
-<h2>It also improves learning</h2>
-<table><tr><th>policy</th><th>final</th><th>curve area</th></tr>
-<tr><td>fixed 0.20</td><td>0.80984</td><td>0.65815</td></tr>
-<tr><td>fixed 0.70</td><td>0.83336</td><td>0.66398</td></tr>
-<tr><td>fixed 0.95</td><td>0.86595</td><td>0.65694</td></tr>
-<tr><td>fixed 0.98</td><td>0.85432</td><td>0.62218</td></tr>
-<tr><td class="good">adaptive local</td><td class="good">0.87925</td><td class="good">0.68435</td></tr></table>
-<p class="tiny">8 matched seeds. Adaptive beats every fixed-timescale arm in 8/8 seeds on final score.</p>
+<h2>The local temporal fan</h2>
+<div class="eq">current pole: ωᵦ
+
+fan:
+  ωᵦ − δ
+  ωᵦ
+  ωᵦ + δ
+
+all see the same global modulation
+        ↓
+lowest local prediction error wins
+        ↓
+ωᵦ ← winner
+δ ← 0.85 δ
+        ↓
+fan again</div>
+<p>This is the original generate → compete → retain → regenerate motif acting on the <em>rule that stores causal history</em>, not merely on a synaptic parameter.</p>
 </section>
 
 <section class="card">
-<h2>The biological matrix</h2>
-<div class="eq">branch b owns:
-  route identity
-  Δ-history
-  e_fast
-  e_medium
-  e_slow
-  local confidence over causal lifetime
+<h2>F9 result</h2>
+<table><tr><th>policy</th><th>final</th><th>worst</th></tr>
+<tr><td>F8 discrete</td><td>0.41883</td><td>0.18243</td></tr>
+<tr><td>nearest grid</td><td>0.46206</td><td>0.20583</td></tr>
+<tr><td class="good">adaptive pole fan</td><td class="good">0.57950</td><td class="good">0.28583</td></tr>
+<tr><td>exact oracle</td><td>0.73561</td><td>0.68632</td></tr></table>
+<p class="tiny">8 matched seeds × 6,000 events. Adaptive pole fan beats discrete and nearest-grid controls in 8/8 seeds.</p>
+</section>
 
-one global consequence
-× separated local causal state
-→ branch-specific plasticity</div>
-<p>The key architectural claim is not “neurons run GAs.” It is that physical compartmentalization can preserve causal address after global signals have mixed information.</p>
+<section class="card wide">
+<h2>Watch the pole fan close on hidden modes</h2>
+<canvas id="spectral" width="1080" height="280"></canvas>
+<div class="legend"><span><i class="dot" style="background:#ffd487"></i>hidden temporal modes</span><span><i class="dot" style="background:#79e6ff"></i>branch pole hypotheses</span><span><i class="dot" style="background:#9cffb4"></i>retained pole</span></div>
+<p class="tiny">Illustrative animation of the F9 mechanism, not a replay of one stored seed.</p>
+</section>
+
+<section class="card">
+<h2>Direct parameter recovery</h2>
+<div class="eq">mean |ω − ω*|
+
+start:  0.26180 rad
+end:    0.07657 rad</div>
+<p>The performance gain is accompanied by movement toward the hidden branch frequencies. It is not merely an accidental improvement in task score.</p>
+</section>
+
+<section class="card">
+<h2>The causal address</h2>
+<div class="eq">WHERE?      branch
+WHAT?       eligible local Δ
+HOW LONG?   persistence ρ
+WHICH MODE? resonant frequency ω
+
+address ≈ (branch, ρ, ω)</div>
+<p>The reward itself remains one mixed scalar. The substrate carries the detailed address locally.</p>
 </section>
 </div>
 
 <section class="card wide">
-<h2>What each gate removed</h2>
-<div class="timeline">
-<div class="step"><b>F2</b>Only one route observable. Separation prevents silent damage to unseen routes.</div>
-<div class="step"><b>F3</b>Credit arrives late. Persistent local identity bridges the delay.</div>
-<div class="step"><b>F4</b>Reward loses its source label. Local eligibility rescues mixed global credit.</div>
-<div class="step"><b>F5</b>One memory constant fails. Useful causal lifetime depends on consequence timescale.</div>
-<div class="step"><b>F6</b>The branch selects its own memory lifetime and changes it after a hidden regime switch.</div>
-</div>
+<h2>What the failure taught us</h2>
+<p>F8 matters as much as F9. A weighted mixture of two fixed resonators does not simply become a resonator at the intermediate frequency: the component phases separate over time. So a genuine adaptive spectral mechanism must change the dynamics themselves, not only reweight fixed outputs.</p>
+<div class="eq">F7: choose from supplied modes             ✓
+F8: interpolate arbitrary mode by mixing bank ✗
+F9: move a branch-local resonant pole        partial ✓</div>
 </section>
 
 <section class="boundary">
 <h2>Claim boundary</h2>
-<p>These are synthetic learning experiments, not evidence that a dendrite or AIS implements this exact code. The F6 predictor bank is engineered. What has been earned is narrower: separated local state can solve credit problems that pooled state cannot, and local timescale choice can adapt when the temporal structure of consequence changes.</p>
-<p>The next unresolved recursion is harder: can the available causal lifetimes themselves be grown and pruned instead of supplied in advance? A naive grow/prune attempt does not yet match F6, so that remains open rather than being tuned into a success.</p>
+<p>These are synthetic credit-assignment experiments. V25 does not establish a biological oscillator, a literal genetic algorithm inside a neuron, or a complete spectral router. F9 earns a narrower result: in this off-grid toy, separated local state can use a mixed global consequence to search over and partially recover the temporal pole through which that branch's causal history is represented.</p>
+<p>The next difficult test is <strong>multimodality</strong>: put two useful temporal modes on the same branch. If the mechanism always purifies to one winner, it is still too simple. A true route system sometimes has to preserve multiple temporal highways at once.</p>
 </section>
 
-<p class="links"><a href="../README.md">README</a><a href="../ADAPTIVE_TIMESCALE_RESULTS.md">F6 results</a><a href="https://github.com/anttiluode/GeometricNeuronV25GeneticAlgoAndFanningNeuron">GitHub</a></p>
+<p class="links"><a href="../README.md">README</a><a href="../OFFGRID_RESONANCE_RESULTS.md">F8 failure</a><a href="../ADAPTIVE_RESONATOR_RESULTS.md">F9 results</a><a href="https://github.com/anttiluode/GeometricNeuronV25GeneticAlgoAndFanningNeuron">GitHub</a></p>
 </main>
 <script>
-const fast=document.getElementById('fast'), slow=document.getElementById('slow'), world=document.getElementById('world');
-fast.onclick=()=>{fast.classList.add('active');slow.classList.remove('active');world.textContent='fast consequence world: downstream decay = 0.00\nselected local causal memory ≈ fast trace';};
-slow.onclick=()=>{slow.classList.add('active');fast.classList.remove('active');world.textContent='slow consequence world: downstream decay = 0.90\nselected local causal memory ≈ very slow trace';};
+const c=document.getElementById('spectral'),x=c.getContext('2d');
+const hidden=[.131,.393,.785], max=1.05;
+let poles=Array.from({length:12},()=>.524), radius=.262, tick=0;
+function px(w){return 55+(c.width-110)*(w/max)}
+function draw(){
+  x.clearRect(0,0,c.width,c.height);
+  x.strokeStyle='#26344a';x.lineWidth=2;x.beginPath();x.moveTo(55,205);x.lineTo(c.width-55,205);x.stroke();
+  x.fillStyle='#8091a8';x.font='12px system-ui';['0','π/12','π/6','π/4','π/3'].forEach((s,i)=>{const w=[0,Math.PI/12,Math.PI/6,Math.PI/4,Math.PI/3][i];x.fillText(s,px(w)-10,230)});
+  hidden.forEach((w,i)=>{x.beginPath();x.arc(px(w),65,8,0,Math.PI*2);x.fillStyle='#ffd487';x.fill();x.fillStyle='#aebbd0';x.fillText('hidden '+(i+1),px(w)-24,43)});
+  poles.forEach((w,i)=>{const y=120+(i%4)*19;[-1,0,1].forEach(o=>{const q=Math.max(0,Math.min(max,w+o*radius));x.beginPath();x.arc(px(q),y,o===0?5:3,0,Math.PI*2);x.fillStyle=o===0?'#9cffb4':'#79e6ff';x.fill()})});
+  x.fillStyle='#8393aa';x.fillText('branch pole fans',55,115);x.fillText('frequency →',c.width-120,255);
+}
+function evolve(){
+  poles=poles.map((w,i)=>{const target=hidden[i%hidden.length];const opts=[w-radius,w,w+radius].map(v=>Math.max(0,Math.min(max,v)));return opts.reduce((a,b)=>Math.abs(b-target)<Math.abs(a-target)?b:a)});
+  radius*=.85;tick++;if(tick>10){poles=Array.from({length:12},()=>.524);radius=.262;tick=0}draw();
+}
+draw();setInterval(evolve,900);
 </script>
 </body></html>
