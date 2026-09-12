@@ -1,0 +1,64 @@
+{
+  "gate": "F3_delayed_consequence_local_eligibility",
+  "seeds": 16,
+  "steps": 2400,
+  "branches": 12,
+  "dim": 6,
+  "delay_min": 4,
+  "delay_max": 20,
+  "consequence_noise": 0.002,
+  "summary": {
+    "immediate": {
+      "mean_final_score": 0.9905825996688216,
+      "std_final_score": 0.0009427519569491242,
+      "mean_min_branch_score": 0.9831583572748152,
+      "reach_095_seeds": 16,
+      "mean_reach_095_cycle": 85.0625,
+      "reach_099_seeds": 14,
+      "mean_reach_099_cycle": 185.5
+    },
+    "tagged": {
+      "mean_final_score": 0.9905529936360582,
+      "std_final_score": 0.0009473978902398944,
+      "mean_min_branch_score": 0.9840645871731318,
+      "reach_095_seeds": 16,
+      "mean_reach_095_cycle": 85.4375,
+      "reach_099_seeds": 14,
+      "mean_reach_099_cycle": 181.35714285714286
+    },
+    "history": {
+      "mean_final_score": 0.9918790651461715,
+      "std_final_score": 0.0011410232131453821,
+      "mean_min_branch_score": 0.9862287399367331,
+      "reach_095_seeds": 16,
+      "mean_reach_095_cycle": 75.4375,
+      "reach_099_seeds": 16,
+      "mean_reach_099_cycle": 168.25
+    },
+    "wrong_tag": {
+      "mean_final_score": -0.8651326065847418,
+      "std_final_score": 0.18641315666149977,
+      "mean_min_branch_score": -2.122778723355702,
+      "reach_095_seeds": 0,
+      "mean_reach_095_cycle": null,
+      "reach_099_seeds": 0,
+      "mean_reach_099_cycle": null
+    },
+    "current_branch": {
+      "mean_final_score": -0.5509163606117097,
+      "std_final_score": 0.25024230887790433,
+      "mean_min_branch_score": -1.6651989814690742,
+      "reach_095_seeds": 0,
+      "mean_reach_095_cycle": null,
+      "reach_099_seeds": 0,
+      "mean_reach_099_cycle": null
+    }
+  },
+  "comparisons": {
+    "tagged_minus_immediate_mean": -0.00002960603276330742,
+    "history_minus_tagged_mean": 0.001326071510113297,
+    "history_beats_tagged_seeds": 12,
+    "tagged_beats_wrong_tag_seeds": 16,
+    "tagged_beats_current_branch_seeds": 16
+  }
+}
